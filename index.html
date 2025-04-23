@@ -3,48 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flower Code</title>
+  <title>Flower Code Garden</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
   <style>
     body {
       margin: 0;
       background: #0d0221;
       overflow: hidden;
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      gap: 40px;
     }
 
     .flower {
-      width: 300px;
+      width: 200px;
       height: 300px;
       position: relative;
       transform-style: preserve-3d;
-      transition: transform 0.5s ease;
+    }
+
+    .stem {
+      width: 10px;
+      height: 150px;
+      background: linear-gradient(to top, #0a0, #0f0);
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 5px;
+      transform-origin: bottom;
     }
 
     .petal {
-      width: 100px;
-      height: 150px;
+      width: 80px;
+      height: 120px;
       background: radial-gradient(circle, #ff00c8, #ff6ec4);
       border-radius: 100% 100% 0 0;
       position: absolute;
-      top: 50%;
+      top: 40px;
       left: 50%;
       transform-origin: bottom center;
       opacity: 0.9;
     }
 
     .center {
-      width: 80px;
-      height: 80px;
+      width: 60px;
+      height: 60px;
       background: radial-gradient(circle, #fff200, #ffa200);
       border-radius: 50%;
       position: absolute;
-      top: 50%;
+      top: 40px;
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 10;
@@ -53,46 +64,63 @@
   </style>
 </head>
 <body>
-  <div class="flower" id="flower">
-    <div class="center"></div>
-  </div>
+  <!-- Multiple Flowers -->
+  <div class="flower" id="flower1"></div>
+  <div class="flower" id="flower2"></div>
+  <div class="flower" id="flower3"></div>
+  <div class="flower" id="flower4"></div>
 
   <script>
-    const flower = document.getElementById('flower');
+    function createFlower(flowerId, petalColor1, petalColor2) {
+      const flower = document.getElementById(flowerId);
 
-    const numPetals = 8;
-    for (let i = 0; i < numPetals; i++) {
-      const petal = document.createElement('div');
-      petal.classList.add('petal');
-      petal.style.transform = `translate(-50%, -100%) rotate(${(360 / numPetals) * i}deg)`;
-      flower.appendChild(petal);
-    }
+      // Add stem
+      const stem = document.createElement('div');
+      stem.classList.add('stem');
+      flower.appendChild(stem);
 
-    gsap.fromTo('.petal', {
-      scaleY: 0,
-      opacity: 0,
-    }, {
-      scaleY: 1,
-      opacity: 0.9,
-      duration: 1.5,
-      ease: 'elastic.out(1, 0.5)',
-      stagger: 0.1
-    });
+      // Add flower center
+      const center = document.createElement('div');
+      center.classList.add('center');
+      flower.appendChild(center);
 
-    flower.addEventListener('mouseenter', () => {
-      gsap.to('.center', {
-        boxShadow: '0 0 60px #fff200',
-        duration: 0.5,
-        repeat: 1,
+      // Add petals
+      const numPetals = 8;
+      for (let i = 0; i < numPetals; i++) {
+        const petal = document.createElement('div');
+        petal.classList.add('petal');
+        petal.style.background = `radial-gradient(circle, ${petalColor1}, ${petalColor2})`;
+        petal.style.transform = `translate(-50%, -100%) rotate(${(360 / numPetals) * i}deg)`;
+        flower.appendChild(petal);
+      }
+
+      // Animate petals
+      gsap.fromTo(`#${flowerId} .petal`, {
+        scaleY: 0,
+        opacity: 0,
+      }, {
+        scaleY: 1,
+        opacity: 0.9,
+        duration: 1.5,
+        ease: 'elastic.out(1, 0.5)',
+        stagger: 0.1,
+        delay: Math.random() * 1
+      });
+
+      // Stem sway animation
+      gsap.to(`#${flowerId} .stem`, {
+        rotate: '+=10',
+        duration: 2,
+        ease: 'sine.inOut',
+        repeat: -1,
         yoyo: true
       });
-    });
+    }
 
-    document.addEventListener('mousemove', (e) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 30;
-      const y = (e.clientY / window.innerHeight - 0.5) * 30;
-      flower.style.transform = `rotateX(${-y}deg) rotateY(${x}deg)`;
-    });
+    createFlower('flower1', '#ff00c8', '#ff6ec4');
+    createFlower('flower2', '#00ffff', '#00bfff');
+    createFlower('flower3', '#00ff6a', '#00ffaa');
+    createFlower('flower4', '#ffa500', '#ff6347');
   </script>
 </body>
 </html>
