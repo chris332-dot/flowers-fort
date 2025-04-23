@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flower Code Garden</title>
+  <title>Flower Buffet</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <style>
     body {
@@ -11,23 +11,27 @@
       background: #0d0221;
       overflow: hidden;
       display: flex;
-      flex-wrap: wrap;
       justify-content: center;
-      align-items: center;
+      align-items: end;
       height: 100vh;
-      gap: 40px;
+    }
+
+    .garden {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
     }
 
     .flower {
-      width: 200px;
-      height: 300px;
+      width: 160px;
+      height: 280px;
       position: relative;
       transform-style: preserve-3d;
     }
 
     .stem {
       width: 10px;
-      height: 150px;
+      height: 140px;
       background: linear-gradient(to top, #0a0, #0f0);
       position: absolute;
       bottom: 0;
@@ -40,7 +44,7 @@
     .petal {
       width: 80px;
       height: 120px;
-      background: radial-gradient(circle, #ff00c8, #ff6ec4);
+      background: radial-gradient(circle, #00f0ff, #006eff);
       border-radius: 100% 100% 0 0;
       position: absolute;
       top: 40px;
@@ -64,11 +68,14 @@
   </style>
 </head>
 <body>
-  <!-- Multiple Flowers -->
-  <div class="flower" id="flower1"></div>
-  <div class="flower" id="flower2"></div>
-  <div class="flower" id="flower3"></div>
-  <div class="flower" id="flower4"></div>
+  <div class="garden">
+    <div class="flower" id="flower1"></div>
+    <div class="flower" id="flower2"></div>
+    <div class="flower" id="flower3"></div>
+    <div class="flower" id="flower4"></div>
+    <div class="flower" id="flower5"></div>
+    <div class="flower" id="flower6"></div>
+  </div>
 
   <script>
     function createFlower(flowerId, petalColor1, petalColor2) {
@@ -94,7 +101,16 @@
         flower.appendChild(petal);
       }
 
-      // Animate petals
+      // Grow from beneath
+      gsap.from(flower, {
+        y: 300,
+        opacity: 0,
+        duration: 2,
+        ease: "power4.out",
+        delay: Math.random() * 0.5
+      });
+
+      // Animate petals blooming
       gsap.fromTo(`#${flowerId} .petal`, {
         scaleY: 0,
         opacity: 0,
@@ -102,12 +118,12 @@
         scaleY: 1,
         opacity: 0.9,
         duration: 1.5,
-        ease: 'elastic.out(1, 0.5)',
-        stagger: 0.1,
-        delay: Math.random() * 1
+        ease: 'elastic.out(1, 0.4)',
+        stagger: 0.05,
+        delay: 1
       });
 
-      // Stem sway animation
+      // Stem sway
       gsap.to(`#${flowerId} .stem`, {
         rotate: '+=10',
         duration: 2,
@@ -117,10 +133,16 @@
       });
     }
 
-    createFlower('flower1', '#ff00c8', '#ff6ec4');
-    createFlower('flower2', '#00ffff', '#00bfff');
-    createFlower('flower3', '#00ff6a', '#00ffaa');
-    createFlower('flower4', '#ffa500', '#ff6347');
+    const colors = [
+      ['#00f0ff', '#006eff'],
+      ['#00ffcc', '#0066ff'],
+      ['#ff6ec4', '#ff00c8'],
+      ['#00ffaa', '#00ff6a'],
+      ['#ffa500', '#ff6347'],
+      ['#8a2be2', '#4b0082']
+    ];
+
+    colors.forEach((c, i) => createFlower(`flower${i + 1}`, c[0], c[1]));
   </script>
 </body>
 </html>
