@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flower Buffet</title>
+  <title>Flower Buffet with Clouds and Fireflies</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <style>
     body {
@@ -14,6 +14,7 @@
       justify-content: center;
       align-items: end;
       height: 100vh;
+      position: relative;
     }
 
     .garden {
@@ -65,6 +66,50 @@
       z-index: 10;
       box-shadow: 0 0 30px #ffa200;
     }
+
+    .cloud {
+      position: absolute;
+      top: 50px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      width: 200px;
+      height: 100px;
+      box-shadow: 60px 20px 0 rgba(255,255,255,0.3), 120px 40px 0 rgba(255,255,255,0.3);
+      opacity: 0.7;
+      animation: drift 40s infinite linear;
+      z-index: 1;
+    }
+
+    .cloud-1 { left: -200px; animation-delay: 0s; }
+    .cloud-2 { left: -400px; top: 80px; animation-delay: 10s; }
+    .cloud-3 { left: -600px; top: 100px; animation-delay: 20s; }
+
+    @keyframes drift {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(150vw); }
+    }
+
+    .firefly {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #fff8b0;
+      border-radius: 50%;
+      box-shadow: 0 0 15px #fff8b0;
+      animation: fly 3s infinite ease-in-out, blink 1.5s infinite alternate;
+      z-index: 2;
+    }
+
+    @keyframes fly {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @keyframes blink {
+      0% { opacity: 0.2; }
+      100% { opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -77,21 +122,35 @@
     <div class="flower" id="flower6"></div>
   </div>
 
+  <!-- Clouds -->
+  <div class="cloud cloud-1"></div>
+  <div class="cloud cloud-2"></div>
+  <div class="cloud cloud-3"></div>
+
+  <!-- Fireflies -->
+  <div class="firefly" style="top: 20%; left: 15%; animation-delay: 0.2s;"></div>
+  <div class="firefly" style="top: 30%; left: 50%; animation-delay: 0.5s;"></div>
+  <div class="firefly" style="top: 40%; left: 80%; animation-delay: 0.7s;"></div>
+  <div class="firefly" style="top: 60%; left: 10%; animation-delay: 0.9s;"></div>
+  <div class="firefly" style="top: 70%; left: 70%; animation-delay: 1.2s;"></div>
+
+  <!-- Music -->
+  <audio autoplay loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+  </audio>
+
   <script>
     function createFlower(flowerId, petalColor1, petalColor2) {
       const flower = document.getElementById(flowerId);
 
-      // Add stem
       const stem = document.createElement('div');
       stem.classList.add('stem');
       flower.appendChild(stem);
 
-      // Add flower center
       const center = document.createElement('div');
       center.classList.add('center');
       flower.appendChild(center);
 
-      // Add petals
       const numPetals = 8;
       for (let i = 0; i < numPetals; i++) {
         const petal = document.createElement('div');
@@ -101,7 +160,6 @@
         flower.appendChild(petal);
       }
 
-      // Grow from beneath
       gsap.from(flower, {
         y: 300,
         opacity: 0,
@@ -110,7 +168,6 @@
         delay: Math.random() * 0.5
       });
 
-      // Animate petals blooming
       gsap.fromTo(`#${flowerId} .petal`, {
         scaleY: 0,
         opacity: 0,
@@ -123,7 +180,6 @@
         delay: 1
       });
 
-      // Stem sway
       gsap.to(`#${flowerId} .stem`, {
         rotate: '+=10',
         duration: 2,
